@@ -22,7 +22,7 @@ using translation APIs such as Deepl and Google Translate. It integrates with WP
 You can install this package via Composer by running the following command in the root of your WordPress project:
 
 ```bash
-composer require sitesoft/wp-api-translator
+composer require sitesoft-be/wp-api-translator
 ```
 
 ## Example Usage

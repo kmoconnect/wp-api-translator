@@ -1,18 +1,21 @@
 {
-    "name": "sitesoft/wp-api-translator",
-    "description": "Translate WordPress posts using Deepl or Google Translate API",
-    "type": "library",
-    "license": "MIT",
-    "autoload": {
-        "psr-4": {
-            "Sitesoft\\WpApiTranslator\\": "src/"
-        }
-    },
-    "authors": [
-        {
-            "name": "Sander Rebry"
-        }
-    ],
-    "minimum-stability": "stable",
-    "require": {}
+  "name": "sitesoft-be/wp-api-translator",
+  "description": "Translate WordPress posts using Deepl or Google Translate API",
+  "type": "library",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "Sitesoft\\WpApiTranslator\\": "src/"
+    }
+  },
+  "authors": [
+    {
+      "name": "Sander Rebry",
+      "email": "info@sitesoft.be"
+    }
+  ],
+  "minimum-stability": "stable",
+  "require": {
+    "php": "^8.0"
+  }
 }

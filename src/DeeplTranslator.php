@@ -3,8 +3,8 @@
 namespace Sitesoft\WpApiTranslator;
 
 class DeeplTranslator implements TranslatorInterface {
-	private $apiKey;
-	private $endpoint;
+	private string $apiKey;
+	private string $endpoint;
 
 	public function __construct( string $apiKey, string $endpoint = 'https://api-free.deepl.com/v2/translate' ) {
 		$this->apiKey   = $apiKey;

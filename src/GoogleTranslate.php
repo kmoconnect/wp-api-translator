@@ -26,7 +26,7 @@ class GoogleTranslate implements TranslatorInterface {
 		if ( is_wp_error( $response ) ) {
 			error_log( 'Google Translate API Error: ' . $response->get_error_message() );
 
-			return $text; // Fallback naar originele tekst
+			return $text;
 		}
 
 		$body = json_decode( wp_remote_retrieve_body( $response ), true );

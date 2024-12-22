@@ -2,10 +2,6 @@
 
 namespace Sitesoft\WpApiTranslator;
 
-use function remove_action;
-use function wpml_get_default_language;
-use function wpml_get_trid;
-
 class WPMLPostTranslator {
 	private TranslatorInterface $translator;
 
@@ -13,32 +9,37 @@ class WPMLPostTranslator {
 		$this->translator = $translator;
 	}
 
-	public function translatePostACF( $post_id, array $targetLanguages ): void {
+	public function translatePostACF( $post_id, array|string $targetLanguages ): void {
 		$this->translatePost( $post_id, $targetLanguages );
 
-		$acf_fields = get_fields( $post_id );
+		$acf_fields = get_field_objects( $post_id );
 
 		if ( ! $acf_fields ) {
 			return;
 		}
 
-		foreach ( $acf_fields as $field_key => $field_value ) {
-			if ( is_string( $field_value ) ) {
-				$translated_value = $this->translator->translate( $field_value, $targetLanguages );
-				update_field( $field_key, $translated_value, $post_id );
-			} elseif ( is_array( $field_value ) ) {
-				$translated_array = array_map( function ( $value ) use ( $targetLanguages ) {
-					return is_string( $value )
-						? $this->translator->translate( $value, $targetLanguages )
-						: $value;
-				}, $field_value );
+		foreach ( $acf_fields as $field ) {
+			if ( ! is_array( $field ) ) {
+				continue;
+			}
 
-				update_field( $field_key, $translated_array, $post_id );
+			if ( ! isset( $field["wpml_cf_preferences"] ) ) {
+				continue;
+			}
+
+			// only ACF WPML translating -> wpml_cf_preferences = 2
+			if ( $field["wpml_cf_preferences"] !== 2 ) {
+				continue;
+			}
+
+			foreach ( $targetLanguages as $language ) {
+				$translated_value = $this->translator->translate( $field["value"], $language );
+				update_field( $field["name"], $translated_value, $post_id );
 			}
 		}
 	}
 
-	public function translatePost( $post_id, array $targetLanguages ): void {
+	public function translatePost( $post_id, array|string $targetLanguages ): void {
 		$post = get_post( $post_id );
 
 		if ( ! $post ) {
@@ -53,7 +54,18 @@ class WPMLPostTranslator {
 			return;
 		}
 
+		if ( is_string( $targetLanguages ) ) {
+			$targetLanguages = [ $targetLanguages ];
+		}
+
 		foreach ( $targetLanguages as $lang ) {
+			$existing_title   = apply_filters( 'wpml_get_string', null, $post->post_title, $lang );
+			$existing_content = apply_filters( 'wpml_get_string', null, $post->post_content, $lang );
+
+			if ( ! empty( $existing_title ) || ! empty( $existing_content ) ) {
+				continue;
+			}
+
 			$translated_title   = $this->translator->translate( $post->post_title, $lang );
 			$translated_content = $this->translator->translate( $post->post_content, $lang );
 

@@ -25,9 +25,7 @@ class WPMLPostTranslator {
 			       is_array( $field ) && ! empty( $field["value"] ) &&
 			       ! empty( $field["wpml_cf_preferences"] ) && $field["wpml_cf_preferences"] == 2;
 		}, ARRAY_FILTER_USE_BOTH );
-
-		error_log( print_r( $acf_fields, true ) );
-
+		
 		foreach ( $acf_fields as $field ) {
 			foreach ( $targetLanguages as $language ) {
 				$translated_value = $this->translator->translate( $field["value"], $language );
